@@ -1,0 +1,197 @@
+import java.util.*;
+
+class DuplicateEmployeeIdException extends Exception {
+    public DuplicateEmployeeIdException(String message) {
+        super(message);
+    }
+}
+
+class Department{
+    int id;
+    String name;
+    String dept;
+    
+    public Department(int id, String name, String dept){
+        this.id=id;
+        this.name=name;
+        this.dept=dept;
+    }
+    
+    public int getId(){
+        return id;
+    }
+    public void setId(int id){
+        this.id=id;
+    }
+    public String getName(){
+        return name;
+    }
+    public void setName(String name){
+        this.name=name;
+    }
+    public String getDept(){
+        return dept;
+    }
+    public void setDept(String dept){
+        this.dept=dept;
+    }
+}
+
+
+
+
+public class Main{
+    static Scanner sc=new Scanner(System.in);
+    static ArrayList<Department> list= new ArrayList<Department>();
+    
+    public static void main(String[] args){
+        while (true) {
+            System.out.println("\nEmployee Management System");
+            System.out.println("1. Create user");
+            System.out.println("2. Delete user");
+            System.out.println("3. Print all user details");
+            System.out.println("4. Print a particular user detail");
+            System.out.println("5. Update user details");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            
+            
+            int choice = sc.nextInt();
+            sc.nextLine();
+            
+            switch(choice){
+             case 1:
+                    createUser();
+                    System.out.println("Employee details created successfully!");
+                    break;
+                case 2:
+                    deleteUser();
+                    break;
+                case 3:
+                    printAllUsers();
+                    break;
+                case 4:
+                    printUserDetails();
+                    break;
+                case 5:
+                    updateUserDetails();
+                    break;
+                case 6:
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please enter a number between 1 to 6.");
+            }
+    }
+}
+
+
+static void createUser(){
+    System.out.print("Enter Employee ID:");
+    int id = sc.nextInt();
+    sc.nextLine();
+    System.out.print("Enter Employee Name:");
+    String name = sc.nextLine();
+    System.out.print("Enter Department:");
+    String dept = sc.nextLine();
+    
+    if(check(id)){
+        list.add(new Department(id,name,dept));
+    }
+    else{
+        try{
+            throw new DuplicateEmployeeIdException("Employee ID already exists!");
+        }
+        catch(DuplicateEmployeeIdException ex)
+            {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+    
+
+static void deleteUser(){
+    System.out.print("Enter Employee ID: ");
+    int del = sc.nextInt();
+    boolean found = false;
+    for(int i=0;i<list.size();i++){
+        Department n=list.get(i);
+        if(n.id==del){
+            list.remove(i);
+            System.out.println("Employee deleted successfully");
+            found = true;
+                break;
+        }
+        
+    }
+    if(!found){
+            System.out.println("Employee with ID " + del + " not found");
+        }
+}
+
+static void printAllUsers(){
+    System.out.println("All Employee Details:");
+    for(int i=0;i<list.size();i++){
+    Department n=list.get(i);
+    System.out.println("Employee ID:" + " " + n.id);
+    System.out.println("Employee Name:"+ " " + n.name);
+    System.out.println("Department:" + " " + n.dept);
+    }
+}
+
+static void printUserDetails(){
+    System.out.print("Enter Employee ID: ");
+    int id = sc.nextInt();
+    boolean found = false;
+    for(int i=0;i<list.size();i++){
+        Department n=list.get(i);
+        if(n.id==id){
+              System.out.println("Employee ID:" + " " + n.id);
+              System.out.println("Employee Name:"+ " " + n.name);
+              System.out.println("Department:" + " " + n.dept);
+              found= true;
+              break;
+        }
+        
+    }
+    if(!found){
+        System.out.println("Employee with ID " + id + " not found");
+    }
+}
+
+static void updateUserDetails() {
+        System.out.print("Enter Employee ID to update details: ");
+        int id = sc.nextInt();
+        boolean found = false;
+        for(int i=0;i<list.size();i++){
+            Department n=list.get(i);
+            if(n.id==id){
+                System.out.print("Enter new Employee Name: ");
+                String name = sc.nextLine();
+                System.out.print("Enter new Department: ");
+                String dept = sc.nextLine();
+                
+                n.name=name;
+                n.dept=dept;
+                
+                list.set(i,n);
+                 found= true;
+            }
+        }
+        if(!found) {
+            System.out.println("Employee with ID " + id + " not found");
+        }
+}
+
+static boolean check(int id){
+    for(int i=0;i<list.size();i++){
+        Department n=list.get(i);
+        if(n.id==id){
+            return false;
+        }
+    }
+    return true;
+}
+
+}
